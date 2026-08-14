@@ -22,6 +22,28 @@
 
 using namespace SEASON3B;
 
+namespace
+{
+    constexpr bool IsInGameShopTown(int world)
+    {
+        return world == WD_0LORENCIA
+            || world == WD_2DEVIAS
+            || world == WD_3NORIA
+            || world == WD_51HOME_6TH_CHAR
+            || world == WD_79UNITEDMARKETPLACE;
+    }
+
+    constexpr bool CanOpenInGameShop(bool isSafeZone, int world)
+    {
+        return isSafeZone || IsInGameShopTown(world);
+    }
+
+    static_assert(CanOpenInGameShop(false, WD_0LORENCIA));
+    static_assert(CanOpenInGameShop(false, WD_79UNITEDMARKETPLACE));
+    static_assert(CanOpenInGameShop(true, WD_1DUNGEON));
+    static_assert(!CanOpenInGameShop(false, WD_1DUNGEON));
+}
+
 CNewUIInGameShop::CNewUIInGameShop()
 {
     Init();
@@ -656,7 +678,7 @@ bool CNewUIInGameShop::IsInGameShopOpen()
     if (Hero->Movement)
         return false;
 
-    if (!(Hero->SafeZone) && !(WD_0LORENCIA == gMapManager.WorldActive && WD_3NORIA == gMapManager.WorldActive && WD_2DEVIAS == gMapManager.WorldActive && WD_51HOME_6TH_CHAR == gMapManager.WorldActive))
+    if (!CanOpenInGameShop(Hero->SafeZone, gMapManager.WorldActive))
     {
         CMsgBoxIGSCommon* pMsgBox = NULL;
         CreateMessageBox(MSGBOX_LAYOUT_CLASS(CMsgBoxIGSCommonLayout), &pMsgBox);
