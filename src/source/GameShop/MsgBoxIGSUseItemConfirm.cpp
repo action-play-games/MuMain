@@ -249,7 +249,7 @@ void CMsgBoxIGSUseItemConfirm::RenderTexts()
             m_szDescription[i], IGS_TEXT_DESCRIPTION_WIDTH, 0, RT3_SORT_LEFT);
     }
 
-#ifdef FOR_WORK
+#if defined(FOR_WORK) && defined(ENABLE_INGAME_SHOP_DEBUG_OVERLAY)
     wchar_t szText[256] = { 0, };
     g_pRenderText->SetTextColor(255, 0, 0, 255);
     mu_swprintf(szText, L"m_iStorageSeq : %d", m_iStorageSeq);
@@ -260,7 +260,7 @@ void CMsgBoxIGSUseItemConfirm::RenderTexts()
     g_pRenderText->RenderText(GetPos().x + IMAGE_IGS_FRAME_WIDTH, GetPos().y + 30, szText, 150, 0, RT3_SORT_LEFT);
     mu_swprintf(szText, L"m_szItemType : %c", m_szItemType);
     g_pRenderText->RenderText(GetPos().x + IMAGE_IGS_FRAME_WIDTH, GetPos().y + 40, szText, 150, 0, RT3_SORT_LEFT);
-#endif // FOR_WORK
+#endif // defined(FOR_WORK) && defined(ENABLE_INGAME_SHOP_DEBUG_OVERLAY)
 }
 
 //--------------------------------------------

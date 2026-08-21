@@ -180,7 +180,7 @@ void CMsgBoxIGSBuyConfirm::RenderTexts()
         g_pRenderText->RenderText(GetPos().x, GetPos().y + IGS_TEXT_NOTICE_POS_Y + (i * 10), m_szNotice[i], IMAGE_IGS_FRAME_WIDTH, 0, RT3_SORT_CENTER);
     }
 
-#ifdef FOR_WORK
+#if defined(FOR_WORK) && defined(ENABLE_INGAME_SHOP_DEBUG_OVERLAY)
     wchar_t szText[256] = { 0, };
     g_pRenderText->SetTextColor(255, 0, 0, 255);
     if (m_wItemCode == 65535)
@@ -200,7 +200,7 @@ void CMsgBoxIGSBuyConfirm::RenderTexts()
     g_pRenderText->RenderText(GetPos().x + IMAGE_IGS_FRAME_WIDTH, GetPos().y + 40, szText, 100, 0, RT3_SORT_LEFT);
     mu_swprintf(szText, L"CashType : %d", m_iCashType);
     g_pRenderText->RenderText(GetPos().x + IMAGE_IGS_FRAME_WIDTH, GetPos().y + 50, szText, 100, 0, RT3_SORT_LEFT);
-#endif // FOR_WORK
+#endif // defined(FOR_WORK) && defined(ENABLE_INGAME_SHOP_DEBUG_OVERLAY)
 }
 
 void CMsgBoxIGSBuyConfirm::RenderButtons()
