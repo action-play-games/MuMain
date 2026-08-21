@@ -22,6 +22,28 @@
 
 using namespace SEASON3B;
 
+namespace
+{
+    constexpr bool IsInGameShopTown(int world)
+    {
+        return world == WD_0LORENCIA
+            || world == WD_2DEVIAS
+            || world == WD_3NORIA
+            || world == WD_51HOME_6TH_CHAR
+            || world == WD_79UNITEDMARKETPLACE;
+    }
+
+    constexpr bool CanOpenInGameShop(bool isSafeZone, int world)
+    {
+        return isSafeZone || IsInGameShopTown(world);
+    }
+
+    static_assert(CanOpenInGameShop(false, WD_0LORENCIA));
+    static_assert(CanOpenInGameShop(false, WD_79UNITEDMARKETPLACE));
+    static_assert(CanOpenInGameShop(true, WD_1DUNGEON));
+    static_assert(!CanOpenInGameShop(false, WD_1DUNGEON));
+}
+
 CNewUIInGameShop::CNewUIInGameShop()
 {
     Init();
@@ -196,7 +218,7 @@ void CNewUIInGameShop::RenderTexts()
     g_pRenderText->RenderText(m_Pos.x + TEXT_IGS_STORAGE_PAGE_INFO_POS_X + 48, m_Pos.y + TEXT_IGS_STORAGE_PAGE_INFO_POS_Y, szText, 20, 0, RT3_SORT_LEFT);
 
 #ifdef KJH_MOD_SHOP_SCRIPT_DOWNLOAD
-#ifdef FOR_WORK
+#if defined(FOR_WORK) && defined(ENABLE_INGAME_SHOP_DEBUG_OVERLAY)
     g_pRenderText->SetTextColor(210, 180, 230, 255);
     g_pRenderText->SetFont(g_hFont);
 
@@ -209,7 +231,7 @@ void CNewUIInGameShop::RenderTexts()
     ScriptVer = g_InGameShopSystem->GetCurrentBannerVer();
     mu_swprintf(szText, L"Banner Ver. %d.%d.%d", ScriptVer.Zone, ScriptVer.year, ScriptVer.yearId);
     g_pRenderText->RenderText(m_Pos.x + 12, m_Pos.y + 408, szText, 150, 0, RT3_SORT_LEFT);
-#endif // FOR_WORK
+#endif // defined(FOR_WORK) && defined(ENABLE_INGAME_SHOP_DEBUG_OVERLAY)
 #endif //KJH_MOD_SHOP_SCRIPT_DOWNLOAD
 }
 
@@ -656,7 +678,7 @@ bool CNewUIInGameShop::IsInGameShopOpen()
     if (Hero->Movement)
         return false;
 
-    if (!(Hero->SafeZone) && !(WD_0LORENCIA == gMapManager.WorldActive && WD_3NORIA == gMapManager.WorldActive && WD_2DEVIAS == gMapManager.WorldActive && WD_51HOME_6TH_CHAR == gMapManager.WorldActive))
+    if (!CanOpenInGameShop(Hero->SafeZone, gMapManager.WorldActive))
     {
         CMsgBoxIGSCommon* pMsgBox = NULL;
         CreateMessageBox(MSGBOX_LAYOUT_CLASS(CMsgBoxIGSCommonLayout), &pMsgBox);

@@ -37,25 +37,27 @@ int DivideStringByPixel(wchar_t* alpszDst, int nDstRow, int nDstColumn, const wc
 
     std::wstring szWorkSrc(lpszSrc);  // Convert lpszSrc to std::wstring
 
-    wchar_t szWorkToken[1024];
+    wchar_t szWorkToken[1024] = {};
+    const wchar_t delimiters[] = { szNewlineChar, L'\0' };
     int nLine = 0;
 
     wchar_t* context = nullptr;
-    wchar_t* pszToken = wcstok_s(&szWorkSrc[0], &szNewlineChar, &context);
+    wchar_t* pszToken = wcstok_s(&szWorkSrc[0], delimiters, &context);
 
-    while (pszToken != nullptr)
+    while (pszToken != nullptr && nLine < nDstRow)
     {
+        const int remainingLines = nDstRow - nLine;
         if (bSpaceInsert)
         {
             mu_swprintf(szWorkToken, L" %ls", pszToken);
-            nLine += CutText3(szWorkToken, alpszDst + nLine * nDstColumn, nPixelPerLine, nDstRow, nDstColumn);
+            nLine += CutText3(szWorkToken, alpszDst + nLine * nDstColumn, nPixelPerLine, remainingLines, nDstColumn);
         }
         else
         {
-            nLine += CutText3(pszToken, alpszDst + nLine * nDstColumn, nPixelPerLine, nDstRow, nDstColumn);
+            nLine += CutText3(pszToken, alpszDst + nLine * nDstColumn, nPixelPerLine, remainingLines, nDstColumn);
         }
 
-        pszToken = wcstok_s(nullptr, &szNewlineChar, &context);
+        pszToken = wcstok_s(nullptr, delimiters, &context);
     }
 
     return nLine;

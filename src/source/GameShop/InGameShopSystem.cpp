@@ -106,7 +106,7 @@ bool CInGameShopSystem::ScriptDownload()
     wcscpy(m_szScriptRemotePath, L"/Global/Payment/ProductTransfer");
     wcscpy(szScriptRemotePathforDMZ, L"/Global/Payment/DevScriptGB/ProductTransfer");
 
-#ifdef FOR_WORK
+#if defined(FOR_WORK) && defined(ENABLE_INGAME_SHOP_DEBUG_OVERLAY)
     HANDLE hFile;
     hFile = CreateFile(L"dmz.ini",     // file to create
         GENERIC_READ,			// open for reading
@@ -121,7 +121,7 @@ bool CInGameShopSystem::ScriptDownload()
         wcscpy(m_szScriptRemotePath, szScriptRemotePathforDMZ);
     }
     CloseHandle(hFile);
-#endif // FOR_WORK
+#endif // defined(FOR_WORK) && defined(ENABLE_INGAME_SHOP_DEBUG_OVERLAY)
     m_ShopManager.SetListManagerInfo(HTTP, m_szScriptIPAddress,
         L"",
         L"",
@@ -178,7 +178,7 @@ bool CInGameShopSystem::BannerDownload()
     wcscpy(m_szBannerRemotePath, L"/Global/Payment/BannerTransfer");
     wcscpy(szBannerRemotePathforDMZ, L"/Global/Payment/DevScriptGB/BannerTransfer");
 
-#ifdef FOR_WORK
+#if defined(FOR_WORK) && defined(ENABLE_INGAME_SHOP_DEBUG_OVERLAY)
     HANDLE hFile;
     hFile = CreateFile(L"dmz.ini",     // file to create
         GENERIC_READ,			// open for reading
@@ -193,7 +193,7 @@ bool CInGameShopSystem::BannerDownload()
         wcscpy(m_szBannerRemotePath, szBannerRemotePathforDMZ);
     }
     CloseHandle(hFile);
-#endif // FOR_WORK
+#endif // defined(FOR_WORK) && defined(ENABLE_INGAME_SHOP_DEBUG_OVERLAY)
 
 #ifdef KJH_MOD_SHOP_SCRIPT_DOWNLOAD
     m_BannerManager.SetListManagerInfo(HTTP, m_szBannerIPAddress,

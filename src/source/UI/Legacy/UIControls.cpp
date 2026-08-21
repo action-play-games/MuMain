@@ -39,11 +39,28 @@ extern BOOL g_bUseWindowMode;
 
 #define ARRAY_SIZE(pArray) (sizeof(pArray)/sizeof(pArray[0]))
 
+namespace
+{
+int CopyTextLine(const std::wstring& text, wchar_t* destination, int destinationLength)
+{
+    if (destination == nullptr || destinationLength <= 0)
+    {
+        return 0;
+    }
+
+    const auto maximumLength = static_cast<size_t>(destinationLength - 1);
+    const auto copyLength = std::min(text.length(), maximumLength);
+    text.copy(destination, copyLength);
+    destination[copyLength] = L'\0';
+    return static_cast<int>(copyLength);
+}
+}
+
 int CutStr(const wchar_t* pszSrcText, wchar_t* pTextOut, const int iTargetPixelWidth, const int iMaxOutLine, const int iOutStrLength, const int iFirstLineTab /* = 0 */)
 {
-    if (iFirstLineTab < 0)
+    if (pTextOut == nullptr || iTargetPixelWidth <= 0 || iMaxOutLine <= 0 || iOutStrLength <= 1 || iFirstLineTab < 0)
     {
-      return 0;
+        return 0;
     }
 
     if (pszSrcText == nullptr)
@@ -78,9 +95,9 @@ int CutStr(const wchar_t* pszSrcText, wchar_t* pTextOut, const int iTargetPixelW
         else
         {
             // we can copy that to the destination
-            tempString.copy(pTextOut, tempString.length(), 0);
+            const int copiedCharacters = CopyTextLine(tempString, pTextOut, iOutStrLength);
             iLineIndex++;
-            processedSourceCharacters += tempString.length();
+            processedSourceCharacters += copiedCharacters;
 
             pTextOut += iOutStrLength; // move destination pointer to the next line
             if (processedSourceCharacters < totalCharacters)
